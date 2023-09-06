@@ -11,6 +11,7 @@ services:
     depends_on:
       - make_table
     restart: always
+    command: python3 /scripts/csv_consumer.py
 
   consumer2:
     image: consumer-postgres
