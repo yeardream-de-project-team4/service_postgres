@@ -4,31 +4,34 @@
 version: '2.1'
 services:
   consumer1:
-    build: ./consumers
-    container_name: consumer1
+    image: consumer-postgres
+    container_name: postgres-consumer1
     env_file:
       - .env
     depends_on:
       - make_table
+    restart: always
 
   consumer2:
-    build: ./consumers
-    container_name: consumer2
+    image: consumer-postgres
+    container_name: postgres-consumer2
     env_file:
       - .env
     depends_on:
       - make_table
+    restart: always
 
   consumer3:
-    build: ./consumers
-    container_name: consumer3
+    image: consumer-postgres
+    container_name: postgres-consumer3
     env_file:
       - .env
     depends_on:
       - make_table
+    restart: always
 
   make_table:
-    build: ./consumers
+    image: consumer-postgres
     container_name: make_table
     env_file:
       - .env

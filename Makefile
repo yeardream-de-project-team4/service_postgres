@@ -3,7 +3,7 @@ all: build up
 
 # Build all service images
 build:
-	docker-compose build
+	docker build -t consumer-postgres ./consumers
 
 # Start all services
 up:

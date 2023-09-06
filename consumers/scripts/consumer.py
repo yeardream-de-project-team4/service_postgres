@@ -1,6 +1,7 @@
 import os
-import requests
+import json
 from kafka import KafkaConsumer
+from db import PostgresDB
 
 
 class MessageConsumer:
@@ -13,11 +14,18 @@ class MessageConsumer:
             enable_auto_commit=True,
         )
         self.consumer.subscribe(topics)
+        self.db = PostgresDB()
 
     def receive_message(self):
         try:
             for message in self.consumer:
-                print(message)
+                if message.topic == topics[0]:
+                    data = json.loads(message.value)
+                    fields = (data["name"], data["age"])
+                    sql = """
+                        INSERT INTO example_table (name, age) VALUES (%s, %s);
+                    """
+                    self.db.execute(sql, fields)
         except Exception as exc:
             raise exc
 
