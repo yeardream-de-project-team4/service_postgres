@@ -6,10 +6,11 @@ time.sleep(10)
 postgres = PostgresDB()
 
 create_table_query = """
-CREATE TABLE IF NOT EXISTS example_table (
+CREATE TABLE IF NOT EXISTS weather_data (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    age INT
+    timestamp TIMESTAMP,
+    temperature NUMERIC,
+    precipitation NUMERIC
 );
 """
 
