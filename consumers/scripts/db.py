@@ -15,3 +15,13 @@ class PostgresDB:
         with self.conn:
             with self.conn.cursor() as curs:
                 curs.execute(sql, data)
+                
+    def execute_many(self, sql, data_list):
+        try:
+            with self.conn:
+                with self.conn.cursor() as curs:
+                    curs.executemany(sql, data_list)
+        except Exception as e:
+            self.conn.rollback()
+            print(f"Error while bulk inserting: {e}")
+            raise e
