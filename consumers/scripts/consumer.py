@@ -1,38 +1,41 @@
 import os
 import json
+
 from kafka import KafkaConsumer
+
 from db import PostgresDB
+from consumer_csv import callback_csv
+from consumer_weather import callback_weather
+from consumer_coin import callback_coin
 
 
 class MessageConsumer:
-    def __init__(self, brokers, topics, group_id):
+    def __init__(self):
         self.consumer = KafkaConsumer(
-            bootstrap_servers=brokers,
-            value_deserializer=lambda x: x.decode("utf-8"),
-            group_id=group_id,
+            bootstrap_servers=os.getenv("KAFKA_BROKERS").split(","),
+            value_deserializer=lambda x: json.loads(x.decode("utf-8")),
+            group_id=os.getenv("KAFKA_CONSUMER_GROUP"),
             enable_auto_commit=True,
         )
-        self.consumer.subscribe(topics)
+        self.events = {}
+        self.db = PostgresDB()
 
-    def receive_message(self):
-        try:
-            for message in self.consumer:
-                if message.topic == topics[0]:
-                    data = json.loads(message.value)
-                    if data:
-                        sql = f"""
-                            INSERT INTO weather_data (timestamp, temperature, precipitation)
-                            VALUES ('{data.get("time", None)}', {data.get("temp", 0)}, {data.get("rain", 0)});
-                        """
-                        db = PostgresDB()
-                        db.execute(sql)
-        except Exception as exc:
-            raise exc
+    def regist_event(self, topic, callback):
+        self.events[topic] = callback
+
+    def start(self):
+        self.consumer.subscribe(list(self.events.keys()))
+        for message in self.consumer:
+            try:
+                self.events[message.topic](message, self.db)
+            except Exception as e:
+                print(e)
+                continue
 
 
 if __name__ == "__main__":
-    brokers = os.getenv("KAFKA_BROKERS").split(",")
-    group_id = os.getenv("KAFKA_CONSUMER_GROUP")
-    topics = ["taehoon-topic3"]
-    cs = MessageConsumer(brokers, topics, group_id)
-    cs.receive_message()
+    consumer = MessageConsumer()
+    consumer.regist_event("flask-postgres-csv", callback_csv)
+    consumer.regist_event("flask-postgres-weather", callback_weather)
+    consumer.regist_event("flask-postgres-coin", callback_coin)
+    consumer.start()

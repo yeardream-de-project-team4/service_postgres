@@ -15,7 +15,7 @@ class PostgresDB:
         with self.conn:
             with self.conn.cursor() as curs:
                 curs.execute(sql, data)
-                
+
     def execute_many(self, sql, data_list):
         try:
             with self.conn:
