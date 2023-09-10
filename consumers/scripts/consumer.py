@@ -7,6 +7,7 @@ from db import PostgresDB
 from consumer_csv import callback_csv
 from consumer_weather import callback_weather
 from consumer_coin import callback_coin
+from consumer_market import callback_market
 
 
 class MessageConsumer:
@@ -38,4 +39,5 @@ if __name__ == "__main__":
     consumer.regist_event("flask-postgres-csv", callback_csv)
     consumer.regist_event("flask-postgres-weather", callback_weather)
     consumer.regist_event("flask-postgres-coin", callback_coin)
+    consumer.regist_event("flask-postgres-market", callback_market)
     consumer.start()
