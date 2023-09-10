@@ -3,27 +3,27 @@
 
 version: '2.1'
 services:
-  consumer1:
+  consumer-postgres1:
     image: consumer-postgres
-    container_name: postgres-consumer1
+    container_name: consumer-postgres1
     env_file:
       - .env
     depends_on:
       - make_table
     restart: always
 
-  consumer2:
+  consumer-postgres2:
     image: consumer-postgres
-    container_name: postgres-consumer2
+    container_name: consumer-postgres2
     env_file:
       - .env
     depends_on:
       - make_table
     restart: always
 
-  consumer3:
+  consumer-postgres3:
     image: consumer-postgres
-    container_name: postgres-consumer3
+    container_name: consumer-postgres3
     env_file:
       - .env
     depends_on:
