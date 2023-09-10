@@ -19,7 +19,7 @@ def callback_coin(
         """
         db.execute_many(sql, batch)
         # 배치 비우기
-        batch = []
+        batch.clear()
         # 시간 초기화
         last_insert_time.pop()
         last_insert_time.append(time.time())
