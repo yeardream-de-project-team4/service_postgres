@@ -1,5 +1,6 @@
 import os
 import json
+import time
 
 from kafka import KafkaConsumer
 
@@ -35,6 +36,7 @@ class MessageConsumer:
 
 
 if __name__ == "__main__":
+    time.sleep(5)
     consumer = MessageConsumer()
     consumer.regist_event("flask-postgres-csv", callback_csv)
     consumer.regist_event("flask-postgres-weather", callback_weather)
