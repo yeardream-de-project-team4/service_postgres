@@ -9,7 +9,7 @@ def callback_coin(
     insert_interval=10,
     last_insert_time=[time.time()],
 ):
-    batch.append(tuple(message.value().values()))
+    batch.append(tuple(message.value.values()))
     if (
         len(batch) >= batch_size
         or time.time() - last_insert_time[-1] >= insert_interval
